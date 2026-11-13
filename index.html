@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>责任心光谱与边界感测评 · 个人多维诊断问卷</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-main: #FBE7E0;
+      --bg-card: #FFF8F5;
+      --bg-card-hover: #FFFDFB;
+      --bg-subtle: #F4DAD1;
+      --text-main: rgba(0, 0, 0, 0.85);
+      --text-secondary: rgba(0, 0, 0, 0.65);
+      --text-muted: rgba(0, 0, 0, 0.48);
+      --accent-sage: #7E9F87;
+      --accent-sage-dark: #63826B;
+      --accent-sage-light: #E6F0E8;
+      --accent-coral: #D98A76;
+      --accent-coral-light: #F9E3DC;
+      --accent-amber: #C9935B;
+      --border-soft: rgba(0, 0, 0, 0.1);
+      --border-active: rgba(0, 0, 0, 0.35);
+      --shadow-soft: 0 8px 28px rgba(70, 40, 30, 0.06);
+      --shadow-hover: 0 12px 34px rgba(70, 40, 30, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      line-height: 1.65;
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Rounded Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background-color: var(--bg-card);
+      border: 1.5px solid rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      background-color: var(--bg-card-hover);
+      border-color: rgba(0, 0, 0, 0.35);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-sage-light);
+      border-color: var(--accent-sage);
+      color: var(--text-main);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: #D6E7DA;
+      border-color: var(--accent-sage-dark);
+    }
+
+    .btn-coral {
+      background-color: var(--accent-coral-light);
+      border-color: var(--accent-coral);
+      color: var(--text-main);
+    }
+
+    .btn-coral:hover:not(:disabled) {
+      background-color: #F4D2C7;
+      border-color: #B86B57;
+    }
+
+    .btn-sm {
+      padding: 7px 16px;
+      font-size: 0.84rem;
+    }
+
+    /* Card Containers */
+    .card {
+      background-color: var(--bg-card);
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 20px;
+      transition: all 0.25s ease;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 22px 18px;
+        border-radius: 20px;
+      }
+    }
+
+    /* Headings & Text */
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+
+    h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* Scene Badges */
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 12px;
+      margin: 22px 0 28px;
+    }
+
+    .scene-pill {
+      background-color: var(--bg-main);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 18px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .scene-pill .icon {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .scene-pill .title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: block;
+    }
+
+    .scene-pill .desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* Theory Note Box */
+    .insight-box {
+      background-color: var(--bg-main);
+      border-left: 4px solid var(--accent-sage);
+      padding: 16px 20px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      font-size: 0.92rem;
+    }
+
+    /* Progress Section */
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background-color: var(--bg-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--accent-sage);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Question Dots Navigation */
+    .dot-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 22px;
+    }
+
+    .dot-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .dot-btn.answered {
+      background-color: var(--accent-sage-light);
+      border-color: var(--accent-sage);
+    }
+
+    .dot-btn.active {
+      background-color: var(--text-main);
+      color: #FFF8F5;
+      border-color: var(--text-main);
+      transform: scale(1.08);
+    }
+
+    /* Question Area */
+    .question-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 13px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background-color: var(--bg-main);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .tag-badge.sage {
+      background-color: var(--accent-sage-light);
+      border-color: rgba(126, 159, 135, 0.45);
+    }
+
+    .question-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      margin-bottom: 22px;
+      line-height: 1.55;
+    }
+
+    /* Options List */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      border-radius: 20px;
+      background-color: var(--bg-main);
+      border: 1.5px solid rgba(0, 0, 0, 0.1);
+      color: var(--text-main);
+      font-size: 0.96rem;
+      line-height: 1.55;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.18s ease;
+    }
+
+    .option-btn:hover {
+      background-color: #FFF4EE;
+      border-color: rgba(0, 0, 0, 0.28);
+      transform: translateX(3px);
+    }
+
+    .option-btn.selected {
+      background-color: var(--accent-sage-light);
+      border-color: var(--accent-sage-dark);
+      box-shadow: 0 4px 14px rgba(126, 159, 135, 0.18);
+    }
+
+    .option-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background-color: var(--bg-card);
+      border: 1.5px solid rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-top: 1px;
+    }
+
+    .option-btn.selected .option-letter {
+      background-color: var(--text-main);
+      color: #FFF8F5;
+      border-color: var(--text-main);
+    }
+
+    /* Footer Actions */
+    .quiz-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    /* All Questions List Mode */
+    .overview-item {
+      padding: 20px;
+      border-radius: 20px;
+      background-color: var(--bg-main);
+      margin-bottom: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Results Styles */
+    .result-Banner {
+      background: linear-gradient(135deg, #FFF8F5 0%, #F5E1D8 100%);
+      border-radius: 22px;
+      padding: 26px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .score-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .score-card {
+      background-color: var(--bg-main);
+      padding: 18px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .score-card .label {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .score-card .val {
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+
+    .score-card .sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 310px;
+      width: 100%;
+      margin: 10px auto 24px;
+    }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .match-box {
+      background-color: var(--bg-main);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    .match-box.good {
+      border-top: 4px solid var(--accent-sage);
+    }
+
+    .match-box.warn {
+      border-top: 4px solid var(--accent-coral);
+    }
+
+    .match-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .match-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+    }
+
+    .match-list li::before {
+      content: "•";
+      position: absolute;
+      left: 3px;
+      font-weight: bold;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #FFF8F5;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Breakdown details */
+    .dim-bar-row {
+      margin-bottom: 14px;
+    }
+
+    .dim-bar-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .dim-bar-bg {
+      height: 9px;
+      background-color: var(--bg-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .dim-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="top-bar">
+      <div class="brand-tag">
+        <span>🌱</span>
+        <span>责任心光谱与边界感诊断问卷</span>
+      </div>
+      <div class="nav-pills">
+        <button id="btnNavHome" class="btn btn-sm" type="button">首页说明</button>
+        <button id="btnNavQuiz" class="btn btn-sm" type="button">答题卡</button>
+        <button id="btnNavResult" class="btn btn-sm hidden" type="button">查看报告</button>
+      </div>
+    </header>
+
+    <!-- View 1: Intro View -->
+    <section id="viewIntro" class="card">
+      <h1>你的责任心有多强？属于哪一种兑现机制？</h1>
+      <p class="subtitle">
+        真正的责任心不仅体现在“把事情做完、把承诺兑现”，更体现在遇到模糊边界时，你是选择<strong>建立标准掌控结果</strong>，还是陷入<strong>替所有人兜底的内耗</strong>。
+      </p>
+
+      <div class="scene-grid">
+        <div class="scene-pill">
+          <span class="icon">🎮</span>
+          <span class="title">游戏开荒与联机</span>
+          <span class="desc">全收集、存档与队友分工</span>
+        </div>
+        <div class="scene-pill">
+          <span class="icon">🐾</span>
+          <span class="title">宠物照料日常</span>
+          <span class="desc">口粮饮水、健康与托管清单</span>
+        </div>
+        <div class="scene-pill">
+          <span class="icon">🍳</span>
+          <span class="title">厨房与家务动线</span>
+          <span class="desc">备菜火候、收纳与台面归位</span>
+        </div>
+        <div class="scene-pill">
+          <span class="icon">💼</span>
+          <span class="title">工作交付与合规</span>
+          <span class="desc">标准核验、长线节奏与权责</span>
+        </div>
+        <div class="scene-pill">
+          <span class="icon">🤝</span>
+          <span class="title">人际交往与契约</span>
+          <span class="desc">守时承诺、倾听与课题分离</span>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <strong>💡 测评设计逻辑（结合职业与生活边界模型）：</strong><br>
+        本问卷共 <strong>15 道生活化情境题</strong>，从五大日常切面同时评估你的<strong>「责任心强度指数」</strong>与<strong>「边界管理/防内耗指数」</strong>，帮你看清自己适合怎样的职业环境与合作关系（如：边界清晰的专业判断型岗位 vs. 需求无限扩张的多方兜底型位置）。
+      </div>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button id="btnStartQuiz" class="btn btn-primary" type="button">开始逐题作答（15题）</button>
+        <button id="btnStartListMode" class="btn" type="button">展开整卷模式作答</button>
+        <button id="btnClearSaved" class="btn btn-sm" type="button" style="margin-left: auto;">清空历史记录</button>
+      </div>
+    </section>
+
+    <!-- View 2: Single Question Mode -->
+    <section id="viewQuiz" class="card hidden">
+      <div class="progress-header">
+        <span id="progressText">第 1 / 15 题</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span id="answeredCountText">已答 0/15</span>
+          <button id="btnToggleViewMode" class="btn btn-sm" type="button">切换整卷视图</button>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-fill" style="width: 6.6%;"></div>
+      </div>
+
+      <!-- Question Dots -->
+      <div id="dotNavContainer" class="dot-nav"></div>
+
+      <!-- Single Question View -->
+      <div id="singleQuestionBox">
+        <div class="question-meta">
+          <span id="qDomainBadge" class="tag-badge sage">🎮 游戏情境</span>
+          <span id="qMechanismBadge" class="tag-badge">维度：质量与完美度</span>
+        </div>
+        <div id="qTitle" class="question-title">题目加载中...</div>
+        <div id="qOptionsList" class="options-list"></div>
+
+        <div class="quiz-footer">
+          <button id="btnPrevQ" class="btn" type="button">← 上一题</button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button id="btnNextQ" class="btn" type="button">下一题 →</button>
+            <button id="btnSubmitQuiz" class="btn btn-primary hidden" type="button">生成诊断报告 ✨</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List All Questions View -->
+      <div id="listQuestionsBox" class="hidden">
+        <div id="allQuestionsContainer"></div>
+        <div class="quiz-footer">
+          <span id="listFooterStatus" style="font-size: 0.9rem; font-weight: 600;">请完成全部 15 道题目</span>
+          <button id="btnSubmitFromList" class="btn btn-primary" type="button">生成诊断报告 ✨</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- View 3: Result Report View -->
+    <section id="viewResult" class="hidden">
+      <div class="card">
+        <div class="result-Banner">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+            <span id="resBadgeType" class="tag-badge sage">核心诊断结果</span>
+            <span id="resDateText" style="font-size: 0.82rem; color: var(--text-secondary);"></span>
+          </div>
+          <h1 id="resArchetypeTitle" style="margin-bottom: 8px;">定海神针型·高标准守界人</h1>
+          <p id="resArchetypeSummary" style="font-size: 0.98rem; color: var(--text-main);"></p>
+        </div>
+
+        <!-- KPI Score Row -->
+        <div class="score-cards">
+          <div class="score-card">
+            <div class="label">🌟 责任心强度总分</div>
+            <div id="resScoreConsc" class="val">92%</div>
+            <div id="resSubConsc" class="sub">极高靠谱度 · 承诺必达</div>
+          </div>
+          <div class="score-card">
+            <div class="label">🛡️ 边界感与自主掌控度</div>
+            <div id="resScoreBoundary" class="val">85%</div>
+            <div id="resSubBoundary" class="sub">权责清晰 · 课题分离良好</div>
+          </div>
+          <div class="score-card">
+            <div class="label">🔥 隐性替人兜底内耗风险</div>
+            <div id="resScoreBurnout" class="val">22%</div>
+            <div id="resSubBurnout" class="sub">低风险 · 情绪稳定可控</div>
+          </div>
+        </div>
+
+        <!-- Radar Chart & Dimension Bars -->
+        <h2>一、五维场景表现与兑现机制剖析</h2>
+        <div class="chart-wrapper">
+          <canvas id="radarChartCanvas"></canvas>
+        </div>
+
+        <div id="dimensionBarsContainer" style="margin-top: 18px; margin-bottom: 28px;"></div>
+
+        <!-- Career & Environment Suitability based on Handwritten Notes -->
+        <h2>二、责任心兑现机制：你适合 vs 需要警惕的环境</h2>
+        <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 14px;">
+          根据你的作答倾向，结合<strong>「边界 · 专业能力 · 自主权」</strong>三角模型为你生成的环境匹配建议：
+        </p>
+
+        <div class="match-grid">
+          <div class="match-box good">
+            <h3>✅ 让你的责任心直接结出果实的土壤</h3>
+            <ul id="resGoodList" class="match-list"></ul>
+          </div>
+          <div class="match-box warn">
+            <h3>⚠️ 容易透支你责任心的“黑洞”场景</h3>
+            <ul id="resWarnList" class="match-list"></ul>
+          </div>
+        </div>
+
+        <!-- Custom Actionable Advice -->
+        <div style="margin-top: 24px;" class="insight-box">
+          <h3 style="margin-bottom: 6px;">📌 给你的日常与职场微调建议</h3>
+          <div id="resActionAdvice" style="font-size: 0.93rem;"></div>
+        </div>
+
+        <!-- Actions Footer -->
+        <div class="quiz-footer" style="margin-top: 24px;">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button id="btnCopyReport" class="btn btn-primary" type="button">📋 复制文字版报告</button>
+            <button id="btnReviewAnswers" class="btn" type="button">🔍 回顾/修改我的作答</button>
+          </div>
+          <button id="btnRetakeQuiz" class="btn btn-coral" type="button">🔄 重新测评</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastMsg" class="toast">提示信息</div>
+
+  <script>
+    // 15 Custom Scenarios across 5 Daily Domains + Responsibility & Boundary scoring
+    // c: Conscientiousness (1 to 4), b: Boundary & Autonomy healthy control (1 to 4), o: Over-responsibility/Burnout tendency (0 to 3)
+    const QUESTIONS = [
+      {
+        id: 1,
+        domain: "游戏",
+        domainIcon: "🎮",
+        mechanism: "长线目标与交付标准",
+        title: "在玩《星露谷物语》《饥荒》或大型单机RPG时，面对“全图鉴收集”或“基地自动化建设”，你通常的状态是？",
+        options: [
+          {
+            label: "A",
+            text: "自己规划好清晰的阶段节奏，建表或记笔记逐项打勾，按自己的步调稳步达成100%完美度，过程非常治愈。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "一旦开了档就觉得“必须全部肝完才算对得起这游戏”，哪怕半夜困得不行也强迫自己把漏掉的支线刷完。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "核心主线和喜欢的模块会认真做好，太繁琐枯燥的收集看心情随缘，不强求完美。",
+            c: 3, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "经常兴致勃勃开新档，但基地建了一半就嫌麻烦弃坑，很少有真正通关或成型的时候。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 2,
+        domain: "游戏",
+        domainIcon: "🎮",
+        mechanism: "团队分工与责任划分",
+        title: "和朋友联机生存或打副本时，因为队友不看攻略、乱放物资导致团灭或家被烧，你会怎么做？",
+        options: [
+          {
+            label: "A",
+            text: "提前跟大家约定好箱子分类规则和各自职责（谁做饭、谁打怪），出问题就按规则复盘调整，不替懒人包揽全部杂活。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "嘴上不说，但默默熬夜把所有乱糟糟的箱子重新整理好、独自把全队的装备和食物都备齐，累得不行还怕大家玩得不开心。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "管好自己身上那份装备和物资就行，营地乱就乱吧，反正能凑合活下去。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "直接跟着一起放飞自我，甚至顺手把仅剩的食材也霍霍完，团灭了就直接下线。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 3,
+        domain: "游戏",
+        domainIcon: "🎮",
+        mechanism: "应对短期低迷与自主把控",
+        title: "在游戏里尝试一个高难流派或长线建造工程，前期连续几次失败、产出数据很差，你的反应是？",
+        options: [
+          {
+            label: "A",
+            text: "冷静排查是哪个机制或数值算错了，相信自己的判断并微调配装策略，耐心走完长线验证周期。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "极度自责焦虑，觉得自己怎么这么菜，反复推翻重来并疯狂搜别人的意见，完全打乱了自己的节奏。",
+            c: 3, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "先放一放去干点别的轻松任务，等哪天有灵感了再回来试一试。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "立刻删档或换个不用动脑子的套路，不想花精力去琢磨原因。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 4,
+        domain: "宠物",
+        domainIcon: "🐾",
+        mechanism: "日常SOP与客观结果兑现",
+        title: "照顾家里的猫咪或宠物（如梳毛、清理猫砂盆、换饮水机滤芯、盯饮食状态）时，你的日常习惯更接近？",
+        options: [
+          {
+            label: "A",
+            text: "形成稳定的照料节律与库存预警，主粮克数、饮水清洁和驱虫周期都心里有数，把毛孩子养得毛发顺滑精神饱满。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "哪怕自己生病发烧或加班到凌晨，只要今天没梳够规定分钟数就会陷入深深愧疚，还会因为主子少吃两口粮整晚失眠查资料。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "保证有粮有水、猫砂盆不满溢就行，梳毛或者洗碗等想起来或者看不过眼了再弄。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "经常忙忘了换水或铲屎，要等宠物叫个不停或者味道很大了才匆忙去补救。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 5,
+        domain: "宠物",
+        domainIcon: "🐾",
+        mechanism: "外部标准与明确交接边界",
+        title: "如果你需要出差或去海边度假几天，需要请朋友或上门宠托师代为照顾家里的小动物，你会怎么安排？",
+        options: [
+          {
+            label: "A",
+            text: "提前写好一页极其清晰的照料清单（喂食克数、应急医院、猫砂位置），把物资摆在明面上，按约定付费或答谢，彼此省心。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "既怕麻烦别人不敢提具体要求，又全程提心吊胆盯监控，看到对方没按习惯倒粮也不好意思直说，回来自己暗自崩溃。",
+            c: 3, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "口头交代两句“粮在柜子里，看着喂就行”，具体对方怎么喂不太过问。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "临出发前才抓瞎找人，钥匙和猫粮在哪都没理清楚，全靠朋友自己翻找。",
+            c: 1, b: 1, o: 1
+          }
+        ]
+      },
+      {
+        id: 6,
+        domain: "宠物",
+        domainIcon: "🐾",
+        mechanism: "专业判断与过度揽责辨析",
+        title: "朋友来家里做客时，不听你的提醒硬要去抱正在应激躲藏的猫咪，结果被猫咪哈气或轻轻抓了一下，你的第一反应是？",
+        options: [
+          {
+            label: "A",
+            text: "立刻先拿碘伏帮朋友处理伤口并隔离安抚猫咪，同时温和但坚定地重申猫咪的性格边界，不把“对方违规操作”怪罪到自己或猫头上。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "觉得天塌了一样连声道歉，认为是自己没把猫教好，之后一整个月都对朋友唯唯诺诺、拼命送礼补偿。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "递个创可贴说声“早跟你说别抱啦”，然后就继续聊别的。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "假装没看见或者完全不管，任由场面尴尬冷场。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 7,
+        domain: "厨房",
+        domainIcon: "🍳",
+        mechanism: "执行条理与过程闭环",
+        title: "独自在厨房做一顿包含两菜一汤的晚餐时，你的操作台面和时间节奏通常是怎样的？",
+        options: [
+          {
+            label: "A",
+            text: "备菜、炖煮、爆炒顺序井然，利用等待间隙顺手擦净台面、洗掉空碗，菜出锅时厨房基本也是清爽整洁的。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "对每道菜的刀工和调味严苛到毫米级，哪怕只是自己吃，稍微炒老一点点就整盘倒掉重做，做顿饭像经历一场高压大考。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "饭菜能准时熟透端上桌就行，锅碗瓢盆和灶台油渍等吃完饭歇够了再统一收拾。",
+            c: 3, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "经常烧糊锅底或忘放盐，吃完后水槽堆了三天的碗筷直到没碗可用才洗。",
+            c: 1, b: 1, o: 0
+          }
+        ]
+      },
+      {
+        id: 8,
+        domain: "厨房",
+        domainIcon: "🍳",
+        mechanism: "拒绝“无限需求”与多方协调",
+        title: "聚餐或和室友/家人一起下厨时，大家七嘴八舌臨時改菜单（“我要少油”“他想吃辣”“再加个汤吧”），却没人动手帮忙，你会？",
+        options: [
+          {
+            label: "A",
+            text: "明确锁定今天的固定菜单：“今天主厨定这三道菜，想额外加菜的人负责洗菜切配”，守住厨房掌控权。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "为了满足每个人的口味无限让步，一个人在闷热的厨房里多炒四五个菜，端上桌时自己已经累得一口都吃不下。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "嘴上答应但实际还是按最省事的做法一锅乱炖，谁爱吃不吃。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "直接撂挑子不干了，把食材扔在台面上让大家自己点外卖。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 9,
+        domain: "厨房",
+        domainIcon: "🍳",
+        mechanism: "食材品控与安全底线",
+        title: "关于冰箱里的食材保质期、生熟分案板以及燃气水电安全，你的习惯是？",
+        options: [
+          {
+            label: "A",
+            text: "定期清理临期食材、分类收纳清楚，出门前顺手确认燃气开关，用低成本习惯保障0安全隐患。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "出门走到楼下了还要折返三次拍燃气灶照片，看到室友把生肉熟食放错格会焦虑到整晚睡不着并替对方全部重洗消毒。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "大体注意不吃变质食物，但冰箱深处偶尔也会翻出被遗忘半年的酱料。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "几乎不看保质期，全靠闻一闻碰运气，厨房插座和炉灶也常年不关。",
+            c: 1, b: 1, o: 0
+          }
+        ]
+      },
+      {
+        id: 10,
+        domain: "工作",
+        domainIcon: "💼",
+        mechanism: "专业标准与客观成果交付",
+        title: "在处理需要严格标准的业务（如产品合规认证、检测报告核对、运费成本核算或代码上线）时，你的工作风格是？",
+        options: [
+          {
+            label: "A",
+            text: "依靠专业判断建立清晰的核对清单或计算工具，让交付结果客观可量化，一次过审，减少反复向外部解释辩护的成本。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "不仅把自己的数据核对十遍，连上下游部门本该提供的错漏百出的原始资料也全部包揽过来通宵帮他们重做。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "按流程把必填项填完交上去，如果审核被打回来再根据反馈改。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "觉得条条框框太烦人，经常漏看关键条款或算错小数点，能糊弄过去就算成功。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 11,
+        domain: "工作",
+        domainIcon: "💼",
+        mechanism: "警惕“职责模糊”与无限兜底",
+        title: "当工作中出现一件“没人明确负责、谁沾手谁麻烦”的灰色地带杂事，且有人试图顺手丢给你时，你会？",
+        options: [
+          {
+            label: "A",
+            text: "先厘清事情的归属与权责边界：如果在自己职责内就争取配套资源做好；如果不属于自己，明确拒绝或拉相关负责人对齐。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "看不得事情掉在地上没人管，心里一边委屈吐槽“怎么又是我”，一边把组织管理上的漏洞全部变成自己的加班工作。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "装作没看到消息或者拖字诀，等别人急了自然会找别人去做。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "随口答应下来，但转头就忘在脑后，最后事情彻底烂尾。",
+            c: 1, b: 1, o: 1
+          }
+        ]
+      },
+      {
+        id: 12,
+        domain: "工作",
+        domainIcon: "💼",
+        mechanism: "多方协调与决策自主权",
+        title: "当你需要推进一个跨部门事项，但各方都在提主观修改意见、你却没有拍板权时，你最真实的感受和做法是？",
+        options: [
+          {
+            label: "A",
+            text: "迅速梳理出客观数据方案请有拍板权的人做选择题，锁定交付标准，绝不让自己卡在“无限改稿、独自背锅”的位置。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "试图讨好和满足每一个利益相关方的随机需求，来回改了二十版还在被挑刺，觉得全是自己能力不够。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "谁声音大就按谁说的改，反正最后结果好坏我不在乎，按指令干活而已。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "直接在群里吵架或者摆烂不改了，任由项目卡死。",
+            c: 1, b: 1, o: 1
+          }
+        ]
+      },
+      {
+        id: 13,
+        domain: "人际交往",
+        domainIcon: "🤝",
+        mechanism: "契约精神与守信边界",
+        title: "答应了朋友一件小事（比如帮忙参考个方案、代买样东西或周末约饭），但临近时你突然工作很累或突发状况，你会？",
+        options: [
+          {
+            label: "A",
+            text: "凡事不轻易许诺；一旦答应就会提前留出余量兑现。若真遇不可抗力，第一时间坦诚沟通并给出确定的替代方案。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "哪怕自己已经累到虚脱或发着烧，也咬牙硬撑着去赴约，生怕改期会让朋友失望。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "提前半天跟朋友说声“今天太累啦改天再约”，然后安心在家补觉。",
+            c: 3, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "到了约定时间才说去不了，或者干脆静音装睡放鸽子。",
+            c: 1, b: 1, o: 0
+          }
+        ]
+      },
+      {
+        id: 14,
+        domain: "人际交往",
+        domainIcon: "🤝",
+        mechanism: "情绪课题分离与共情尺度",
+        title: "身边的好友向你倾诉她工作或感情上的烂摊子，你会如何回应这份“人际责任”？",
+        options: [
+          {
+            label: "A",
+            text: "认真倾听并给出真诚的陪伴或客观分析，但心里清楚这是对方的人生课题，不会替对方做决定或背负她的情绪。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "把朋友的痛苦当成自己的责任，比当事人还焦虑，熬夜帮她写小作文、查对策，如果她还不听劝自己会无比挫败内耗。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "发表情包敷衍安慰几句“抱抱你”，心里其实在想别的事。",
+            c: 2, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "嫌对方负能量太重，直接打断话题开始聊自己的事。",
+            c: 1, b: 2, o: 0
+          }
+        ]
+      },
+      {
+        id: 15,
+        domain: "人际交往",
+        domainIcon: "🤝",
+        mechanism: "集体出行与边界博弈",
+        title: "和三五个朋友一起计划短途旅行（如去海边游泳或周边游），在攻略制定与费用分摊上，你通常扮演什么角色？",
+        options: [
+          {
+            label: "A",
+            text: "主动认领自己擅长的一块（如订住宿或查交通），同时把账目和其余分工明明白白拆分给同伴，大家共同配合。",
+            c: 4, b: 4, o: 0
+          },
+          {
+            label: "B",
+            text: "一个人包揽全部攻略、订票、看路，路上有人抱怨天气不好或餐厅排队，你都会觉得是自己没安排好而全程精神紧绷。",
+            c: 4, b: 1, o: 3
+          },
+          {
+            label: "C",
+            text: "完全当“无脑跟团游”选手，别人安排去哪就去哪，让我转账我就立刻A钱，绝不挑刺。",
+            c: 3, b: 3, o: 0
+          },
+          {
+            label: "D",
+            text: "出发前什么都不管，到了现场这也不满意那也不想去，算账A钱还拖拖拉拉。",
+            c: 1, b: 1, o: 0
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "sunniva_responsibility_quiz_v1";
+
+    let state = {
+      currentIndex: 0,
+      viewMode: "single", // "single" | "list"
+      answers: {}, // { questionId: optionIndex }
+      chartInstance: null
+    };
+
+    // Safe localStorage wrapper
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed.answers === "object") {
+            state.answers = parsed.answers;
+            if (typeof parsed.currentIndex === "number" && parsed.currentIndex >= 0 && parsed.currentIndex < QUESTIONS.length) {
+              state.currentIndex = parsed.currentIndex;
+            }
+          }
+        }
+      } catch (e) {
+        // Ignore storage errors in sandboxed frames
+      }
+    }
+
+    function saveCurrentState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          answers: state.answers,
+          currentIndex: state.currentIndex,
+          updatedAt: new Date().toISOString()
+        }));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastMsg");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2400);
+    }
+
+    // View Switching
+    function switchView(viewName) {
+      const vIntro = document.getElementById("viewIntro");
+      const vQuiz = document.getElementById("viewQuiz");
+      const vResult = document.getElementById("viewResult");
+      const btnNavResult = document.getElementById("btnNavResult");
+
+      vIntro.classList.add("hidden");
+      vQuiz.classList.add("hidden");
+      vResult.classList.add("hidden");
+
+      const answeredCount = Object.keys(state.answers).length;
+      if (answeredCount === QUESTIONS.length) {
+        btnNavResult.classList.remove("hidden");
+      } else {
+        btnNavResult.classList.add("hidden");
+      }
+
+      if (viewName === "intro") {
+        vIntro.classList.remove("hidden");
+      } else if (viewName === "quiz") {
+        vQuiz.classList.remove("hidden");
+        renderQuizView();
+      } else if (viewName === "result") {
+        vResult.classList.remove("hidden");
+        renderResultReport();
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Render Quiz
+    function renderQuizView() {
+      const answeredCount = Object.keys(state.answers).length;
+      const total = QUESTIONS.length;
+
+      document.getElementById("progressText").textContent =
+        state.viewMode === "single"
+          ? `第 ${state.currentIndex + 1} / ${total} 题`
+          : `整卷作答模式（共 ${total} 题）`;
+      document.getElementById("answeredCountText").textContent = `已答 ${answeredCount}/${total}`;
+
+      const pct = Math.max(6, Math.round((answeredCount / total) * 100));
+      document.getElementById("progressBar").style.width = `${pct}%`;
+
+      const btnToggle = document.getElementById("btnToggleViewMode");
+      btnToggle.textContent = state.viewMode === "single" ? "展开整卷视图" : "切换逐题卡片";
+
+      const singleBox = document.getElementById("singleQuestionBox");
+      const listBox = document.getElementById("listQuestionsBox");
+      const dotNav = document.getElementById("dotNavContainer");
+
+      if (state.viewMode === "single") {
+        singleBox.classList.remove("hidden");
+        dotNav.classList.remove("hidden");
+        listBox.classList.add("hidden");
+        renderDotNav();
+        renderSingleQuestion();
+      } else {
+        singleBox.classList.add("hidden");
+        dotNav.classList.add("hidden");
+        listBox.classList.remove("hidden");
+        renderAllQuestionsList();
+      }
+    }
+
+    function renderDotNav() {
+      const container = document.getElementById("dotNavContainer");
+      container.innerHTML = "";
+      QUESTIONS.forEach((q, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "dot-btn";
+        if (state.answers[q.id] !== undefined) btn.classList.add("answered");
+        if (idx === state.currentIndex) btn.classList.add("active");
+        btn.textContent = idx + 1;
+        btn.addEventListener("click", () => {
+          state.currentIndex = idx;
+          saveCurrentState();
+          renderQuizView();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function renderSingleQuestion() {
+      const q = QUESTIONS[state.currentIndex];
+      document.getElementById("qDomainBadge").textContent = `${q.domainIcon} ${q.domain}情境`;
+      document.getElementById("qMechanismBadge").textContent = `考察机制：${q.mechanism}`;
+      document.getElementById("qTitle").textContent = `${q.id}. ${q.title}`;
+
+      const optionsContainer = document.getElementById("qOptionsList");
+      optionsContainer.innerHTML = "";
+
+      const selectedIdx = state.answers[q.id];
+
+      q.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn" + (selectedIdx === optIdx ? " selected" : "");
+        btn.innerHTML = `
+          <span class="option-letter">${opt.label}</span>
+          <span>${opt.text}</span>
+        `;
+        btn.addEventListener("click", () => {
+          state.answers[q.id] = optIdx;
+          saveCurrentState();
+          renderQuizView();
+          // Auto advance after short delay if not on last question
+          if (state.currentIndex < QUESTIONS.length - 1) {
+            setTimeout(() => {
+              state.currentIndex++;
+              saveCurrentState();
+              renderQuizView();
+            }, 220);
+          }
+        });
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById("btnPrevQ").disabled = state.currentIndex === 0;
+      const btnNext = document.getElementById("btnNextQ");
+      const btnSubmit = document.getElementById("btnSubmitQuiz");
+
+      const allDone = Object.keys(state.answers).length === QUESTIONS.length;
+      if (state.currentIndex === QUESTIONS.length - 1 || allDone) {
+        btnSubmit.classList.remove("hidden");
+      } else {
+        btnSubmit.classList.add("hidden");
+      }
+
+      btnNext.disabled = state.currentIndex === QUESTIONS.length - 1;
+    }
+
+    function renderAllQuestionsList() {
+      const container = document.getElementById("allQuestionsContainer");
+      container.innerHTML = "";
+
+      QUESTIONS.forEach((q) => {
+        const block = document.createElement("div");
+        block.className = "overview-item";
+        const selectedIdx = state.answers[q.id];
+
+        const metaHtml = `
+          <div class="question-meta">
+            <span class="tag-badge sage">${q.domainIcon} ${q.domain}</span>
+            <span class="tag-badge">${q.mechanism}</span>
+          </div>
+          <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 14px;">${q.id}. ${q.title}</div>
+        `;
+        block.innerHTML = metaHtml;
+
+        const optWrap = document.createElement("div");
+        optWrap.className = "options-list";
+        optWrap.style.marginBottom = "0";
+
+        q.options.forEach((opt, optIdx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "option-btn" + (selectedIdx === optIdx ? " selected" : "");
+          btn.innerHTML = `
+            <span class="option-letter">${opt.label}</span>
+            <span>${opt.text}</span>
+          `;
+          btn.addEventListener("click", () => {
+            state.answers[q.id] = optIdx;
+            saveCurrentState();
+            renderQuizView();
+          });
+          optWrap.appendChild(btn);
+        });
+
+        block.appendChild(optWrap);
+        container.appendChild(block);
+      });
+
+      const answeredCount = Object.keys(state.answers).length;
+      const statusEl = document.getElementById("listFooterStatus");
+      if (answeredCount < QUESTIONS.length) {
+        statusEl.textContent = `还差 ${QUESTIONS.length - answeredCount} 道题未作答`;
+      } else {
+        statusEl.textContent = `已完成全部 ${QUESTIONS.length} 道题目，可以生成报告啦！`;
+      }
+    }
+
+    // Calculate Scores & Render Report
+    function computeResults() {
+      let totalC = 0; // max 15 * 4 = 60, min 15
+      let totalB = 0; // max 15 * 4 = 60, min 15
+      let totalO = 0; // max 15 * 3 = 45, min 0
+
+      const domains = {
+        "游戏": { c: 0, b: 0, o: 0, count: 0, icon: "🎮" },
+        "宠物": { c: 0, b: 0, o: 0, count: 0, icon: "🐾" },
+        "厨房": { c: 0, b: 0, o: 0, count: 0, icon: "🍳" },
+        "工作": { c: 0, b: 0, o: 0, count: 0, icon: "💼" },
+        "人际交往": { c: 0, b: 0, o: 0, count: 0, icon: "🤝" }
+      };
+
+      QUESTIONS.forEach((q) => {
+        const ansIdx = state.answers[q.id] !== undefined ? state.answers[q.id] : 0;
+        const opt = q.options[ansIdx];
+        totalC += opt.c;
+        totalB += opt.b;
+        totalO += opt.o;
+
+        domains[q.domain].c += opt.c;
+        domains[q.domain].b += opt.b;
+        domains[q.domain].o += opt.o;
+        domains[q.domain].count += 1;
+      });
+
+      const pctC = Math.round(((totalC - 15) / 45) * 100);
+      const pctB = Math.round(((totalB - 15) / 45) * 100);
+      const pctO = Math.round((totalO / 45) * 100);
+
+      // Determine Archetype based on Conscientiousness & Boundary Management
+      let archetype = {};
+      if (pctC >= 72 && pctB >= 68) {
+        archetype = {
+          badge: "高责任心 × 强边界掌控",
+          title: "🏛️ 秩序灯塔型 · 高标准守界执行者",
+          summary: "你拥有极强的责任心与交付洁癖，无论是在游戏里规划100%全收集、科学照料宠物、收拾清爽的厨房，还是在工作中核对严密的合规数据，你都能靠「专业判断 + 清晰规则」稳稳兑现成果。更难得的是，你已经具备成熟的课题分离意识，懂得用流程、清单和边界保护自己的精力，拒绝无意义的瞎忙与替人背锅。",
+          goodList: [
+            "【工作边界清晰、交付标准客观的领域】如税务、产品合规（如CPSC/GCC检测标准）、质量品控、数据分析与SOP工具开发——成果好量化，你的高责任心能直接转化为看得见的勋章。",
+            "【依赖专业判断建立标准的岗位】你的专业度和自建工具能力可以成为团队边界标准的一部分，减少对外反复解释、辩护的口舌之争。",
+            "【权责匹配、有自主节奏把控权的长线项目】给你足够的空间去定方向、排节奏，即便短期数据波动，你也能凭实力把责任心转化为可控的结果。"
+          ],
+          warnList: [
+            "【需求永远无法彻底满足的“无限需求型”岗位】如纯乙方执行、缺乏标准的视觉改稿——变化随机且主观，容易让你陷入无休止的修补。",
+            "【有责无权的“多方协调兜底型”位置】所有人都能向你提需求，你却没有资源分配权，最后只有你一个人对结果焦虑负责。",
+            "【职责边界模糊的“大杂烩”综合岗】没有明确归属的杂事全往你桌上丢，容易侵蚀你原本高效的专注力。"
+          ],
+          advice: "你已经非常懂得如何用“机制和工具”来兑现责任心。接下来只需继续坚持<strong>「先对齐标准、再启动执行」</strong>的原则：在接手任何新项目或人际委托前，先把交付边界和各自权责摆在明面上，你的高责任心就会一直成为你最强的核心竞争力，而不是负担。"
+        };
+      } else if (pctC >= 72 && pctB < 68) {
+        archetype = {
+          badge: "高责任心 × 超载兜底预警",
+          title: "🕯️ 负重燃烛型 · 全能兜底完美主义者",
+          summary: "你的责任心强到了令人心疼的程度！无论是工作里没人管的漏洞、厨房里众口难调的菜单、宠物的每一克口粮，还是朋友的情绪低谷，你都习惯性地全部扛在自己肩上。你追求近乎苛刻的完美，看不得任何事情掉在地上，但如果长期处在“需求来源杂、边界模糊”的环境里，你很容易把别人的课题和组织管理的漏洞全变成自己的加班与失眠。",
+          goodList: [
+            "【规则明确、成果客观量化的专业岗】如合规审查、精密核算、独立开发或标准化运营——外部标准能替你挡掉大量无理取闹的随机需求。",
+            "【独立把控闭环的垂直模块】不需要跟七八个只提要求不干活的部门扯皮，让你专心把一件事打磨到极致。",
+            "【有明确SOP与契约精神的合作伙伴】对方守时守信、分工清楚，不会利用你的心软和靠谱无限甩锅。"
+          ],
+          warnList: [
+            "【高危预警：职责模糊的综合岗/总管杂事岗】因为你习惯对所有事情负责，别人一旦发现你会默默兜底，所有没人干的脏活累活都会自动流向你。",
+            "【高危预警：多方协调却无拍板权的夹心层】每个人都在提主观需求，你为了不让人失望无限让步，最后身心俱疲还要独自背锅。",
+            "【人际与合作中的“拯救者陷阱”】过度替朋友或同事的错误买单，剥夺了对方成长的责任，也榨干了自己的能量。"
+          ],
+          advice: "请一定记住笔记里的那句忠告：<strong>「责任心要落地兑现，需要依靠外部标准、专业判断和边界管理，而不是无限接收需求。」</strong>从今天起练习“延时响应”与“课题分离”——不是所有掉在地上的球都写着你的名字，留出30%的精力只讨好自己。"
+        };
+      } else if (pctC >= 45) {
+        archetype = {
+          badge: "弹性责任心 × 实用平衡派",
+          title: "🌿 务实轻舟型 · 重点聚焦平衡者",
+          summary: "你对待责任采取一种非常聪明、务实的“分级管理”策略：在你真正重视的核心事务（比如心爱的宠物、关键工作节点或挚友的约定）上，你绝对靠谱、有始有终；但在非核心的细枝末节上，你懂得抓大放小、适度留白，绝不为了面子上的100%完美而折磨自己。",
+          goodList: [
+            "【目标导向、给足自主空间的弹性工作】看重最终核心产出而非死抠过程形式，让你能用最省力聪明的方式交差。",
+            "【需要情绪稳定与抗压弹性的岗位】当短期数据低迷或外部变动时，你不会过度钻牛角尖内耗，能很快调整心态。",
+            "【松弛有度的人际与团队氛围】大家各司其职、互不绑架，有问题直接沟通。"
+          ],
+          warnList: [
+            "【极度繁琐、容错率为零的机械重复审查】可能会让你觉得枯燥束缚，需要在关键细节上借助自动化工具或核对表（Checklist）防漏。",
+            "【充满道德绑架与形式主义加班的团队】你反感无意义的自我感动式努力，在那种环境里会非常憋屈。"
+          ],
+          advice: "你的松弛感是抵御焦虑的天然护盾！如果想在核心领域更进一步，可以把自己常做的流程固化成<strong>「懒人自动化小工具」或「三步核对清单」</strong>，既不用牺牲你的轻松状态，又能让交付质量稳如泰山。"
+        };
+      } else {
+        archetype = {
+          badge: "随性自由派 × 待建立锚点",
+          title: "☁️ 自由漫游型 · 灵感驱动体验者",
+          summary: "目前的你更倾向于跟随当下的直觉与心情行动，不喜欢被死板的规则、长线的承诺或沉重的责任捆绑。在游戏、厨房或日常事务中，你点子多、启动快，但容易在繁琐的收尾和持续维护阶段感到倦怠。",
+          goodList: [
+            "【短周期、强反馈、重创意灵感的尝试】即时看到效果，不需要长达数月的枯燥维护。",
+            "【有外部明确节点提醒与搭档互补的合作】有人帮你卡控进度条与细节，你负责发散与破局。"
+          ],
+          warnList: [
+            "【长周期、重度依赖自律与严密合规的独立岗】缺乏外部监督时容易拖延或遗漏关键标准。",
+            "【需要长期高频精细照料的承诺】在做出长线承诺前，建议先评估自己的耐心余量。"
+          ],
+          advice: "责任心不是天生的枷锁，而是一种「说到做到所带来的自我掌控感」。不妨每天只选一件最小的事（比如做完饭顺手擦净台面、给猫梳毛5分钟）实现100%闭环，逐步积累属于你的靠谱自信。"
+        };
+      }
+
+      return {
+        pctC,
+        pctB,
+        pctO,
+        domains,
+        archetype
+      };
+    }
+
+    function renderResultReport() {
+      const res = computeResults();
+
+      document.getElementById("resBadgeType").textContent = res.archetype.badge;
+      document.getElementById("resDateText").textContent = `生成时间：${new Date().toLocaleDateString("zh-CN")}`;
+      document.getElementById("resArchetypeTitle").textContent = res.archetype.title;
+      document.getElementById("resArchetypeSummary").textContent = res.archetype.summary;
+
+      document.getElementById("resScoreConsc").textContent = `${res.pctC}%`;
+      document.getElementById("resSubConsc").textContent =
+        res.pctC >= 80 ? "极高靠谱度 · 承诺必达" : res.pctC >= 60 ? "稳健靠谱 · 重点突出" : "随性弹性 · 灵感优先";
+
+      document.getElementById("resScoreBoundary").textContent = `${res.pctB}%`;
+      document.getElementById("resSubBoundary").textContent =
+        res.pctB >= 75 ? "权责清晰 · 课题分离通透" : res.pctB >= 50 ? "边界尚可 · 偶有心软让步" : "边界易模糊 · 急需防甩锅盾牌";
+
+      document.getElementById("resScoreBurnout").textContent = `${res.pctO}%`;
+      document.getElementById("resSubBurnout").textContent =
+        res.pctO >= 50 ? "高内耗预警 · 习惯替所有人兜底" : res.pctO >= 25 ? "中度风险 · 偶有完美主义紧绷" : "低内耗风险 · 节奏自主可控";
+
+      // Render Good & Warn Lists
+      const goodUl = document.getElementById("resGoodList");
+      goodUl.innerHTML = "";
+      res.archetype.goodList.forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        goodUl.appendChild(li);
+      });
+
+      const warnUl = document.getElementById("resWarnList");
+      warnUl.innerHTML = "";
+      res.archetype.warnList.forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        warnUl.appendChild(li);
+      });
+
+      document.getElementById("resActionAdvice").innerHTML = res.archetype.advice;
+
+      // Render Domain Bars
+      const barsContainer = document.getElementById("dimensionBarsContainer");
+      barsContainer.innerHTML = "";
+
+      const domainLabels = [];
+      const domainCData = [];
+      const domainBData = [];
+
+      Object.keys(res.domains).forEach((dKey) => {
+        const d = res.domains[dKey];
+        const dPctC = Math.round(((d.c - d.count) / (d.count * 3)) * 100);
+        const dPctB = Math.round(((d.b - d.count) / (d.count * 3)) * 100);
+
+        domainLabels.push(`${d.icon} ${dKey}`);
+        domainCData.push(dPctC);
+        domainBData.push(dPctB);
+
+        const row = document.createElement("div");
+        row.className = "dim-bar-row";
+        row.innerHTML = `
+          <div class="dim-bar-top">
+            <span>${d.icon} ${dKey}场景</span>
+            <span>责任投入 ${dPctC}% · 边界掌控 ${dPctB}%</span>
+          </div>
+          <div class="dim-bar-bg">
+            <div class="dim-bar-fill" style="width: ${dPctC}%; background-color: #7E9F87;"></div>
+          </div>
+        `;
+        barsContainer.appendChild(row);
+      });
+
+      // Render Radar Chart
+      const ctx = document.getElementById("radarChartCanvas").getContext("2d");
+      if (state.chartInstance) {
+        state.chartInstance.destroy();
+      }
+      if (typeof Chart !== "undefined") {
+        state.chartInstance = new Chart(ctx, {
+          type: "radar",
+          data: {
+            labels: domainLabels,
+            datasets: [
+              {
+                label: "责任心投入度 (%)",
+                data: domainCData,
+                backgroundColor: "rgba(126, 159, 135, 0.25)",
+                borderColor: "#63826B",
+                pointBackgroundColor: "#63826B",
+                borderWidth: 2
+              },
+              {
+                label: "边界与节奏掌控度 (%)",
+                data: domainBData,
+                backgroundColor: "rgba(217, 138, 118, 0.22)",
+                borderColor: "#D98A76",
+                pointBackgroundColor: "#D98A76",
+                borderWidth: 2
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                min: 0,
+                max: 100,
+                ticks: {
+                  stepSize: 25,
+                  color: "rgba(0,0,0,0.55)",
+                  backdropColor: "transparent"
+                },
+                grid: {
+                  color: "rgba(0,0,0,0.08)"
+                },
+                angleLines: {
+                  color: "rgba(0,0,0,0.08)"
+                },
+                pointLabels: {
+                  color: "rgba(0,0,0,0.85)",
+                  font: {
+                    size: 13,
+                    weight: "600"
+                  }
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  color: "rgba(0,0,0,0.85)",
+                  font: {
+                    size: 12,
+                    weight: "600"
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    function copyTextReport() {
+      const res = computeResults();
+      const lines = [
+        `【责任心光谱与边界感测评报告】`,
+        `诊断类型：${res.archetype.title}（${res.archetype.badge}）`,
+        `• 责任心强度总分：${res.pctC}%`,
+        `• 边界感与自主掌控度：${res.pctB}%`,
+        `• 隐性替人兜底内耗风险：${res.pctO}%`,
+        ``,
+        `【五维场景得分】`,
+        ...Object.keys(res.domains).map((k) => {
+          const d = res.domains[k];
+          const c = Math.round(((d.c - d.count) / (d.count * 3)) * 100);
+          const b = Math.round(((d.b - d.count) / (d.count * 3)) * 100);
+          return `- ${d.icon} ${k}：责任心 ${c}% | 边界掌控 ${b}%`;
+        }),
+        ``,
+        `【核心总结】`,
+        res.archetype.summary
+      ].join("\n");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(lines).then(() => {
+          showToast("已复制文字版诊断报告到剪贴板 ✨");
+        }).catch(() => {
+          fallbackCopy(lines);
+        });
+      } else {
+        fallbackCopy(lines);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast("已复制文字版诊断报告到剪贴板 ✨");
+      } catch (e) {
+        showToast("复制失败，请手动截图保存");
+      }
+      document.body.removeChild(ta);
+    }
+
+    // Wire All Event Listeners
+    window.addEventListener("DOMContentLoaded", () => {
+      loadSavedState();
+
+      const answeredCount = Object.keys(state.answers).length;
+      if (answeredCount === QUESTIONS.length) {
+        document.getElementById("btnNavResult").classList.remove("hidden");
+      }
+
+      document.getElementById("btnNavHome").addEventListener("click", () => switchView("intro"));
+      document.getElementById("btnNavQuiz").addEventListener("click", () => switchView("quiz"));
+      document.getElementById("btnNavResult").addEventListener("click", () => switchView("result"));
+
+      document.getElementById("btnStartQuiz").addEventListener("click", () => {
+        state.viewMode = "single";
+        switchView("quiz");
+      });
+
+      document.getElementById("btnStartListMode").addEventListener("click", () => {
+        state.viewMode = "list";
+        switchView("quiz");
+      });
+
+      document.getElementById("btnClearSaved").addEventListener("click", () => {
+        state.answers = {};
+        state.currentIndex = 0;
+        saveCurrentState();
+        document.getElementById("btnNavResult").classList.add("hidden");
+        showToast("已清空历史作答记录");
+      });
+
+      document.getElementById("btnToggleViewMode").addEventListener("click", () => {
+        state.viewMode = state.viewMode === "single" ? "list" : "single";
+        renderQuizView();
+      });
+
+      document.getElementById("btnPrevQ").addEventListener("click", () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex--;
+          saveCurrentState();
+          renderQuizView();
+        }
+      });
+
+      document.getElementById("btnNextQ").addEventListener("click", () => {
+        if (state.currentIndex < QUESTIONS.length - 1) {
+          state.currentIndex++;
+          saveCurrentState();
+          renderQuizView();
+        }
+      });
+
+      function handleTrySubmit() {
+        const count = Object.keys(state.answers).length;
+        if (count < QUESTIONS.length) {
+          // Find first unanswered question
+          const firstMissingIdx = QUESTIONS.findIndex((q) => state.answers[q.id] === undefined);
+          if (firstMissingIdx !== -1) {
+            state.currentIndex = firstMissingIdx;
+            renderQuizView();
+          }
+          showToast(`还有 ${QUESTIONS.length - count} 道题未作答，已为你定位到未答题`);
+          return;
+        }
+        switchView("result");
+      }
+
+      document.getElementById("btnSubmitQuiz").addEventListener("click", handleTrySubmit);
+      document.getElementById("btnSubmitFromList").addEventListener("click", handleTrySubmit);
+
+      document.getElementById("btnCopyReport").addEventListener("click", copyTextReport);
+      document.getElementById("btnReviewAnswers").addEventListener("click", () => {
+        state.viewMode = "list";
+        switchView("quiz");
+      });
+      document.getElementById("btnRetakeQuiz").addEventListener("click", () => {
+        state.answers = {};
+        state.currentIndex = 0;
+        state.viewMode = "single";
+        saveCurrentState();
+        switchView("quiz");
+        showToast("已开启新一轮测评");
+      });
+    });
+  </script>
+</body>
+</html>
